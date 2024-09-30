@@ -1,0 +1,128 @@
+<!--extending parent template-->
+{% extends "base.html" %}
+
+<!--title-->
+{% block title %}
+    {% if keyword %}
+        {{ keyword }} results
+    {% else %}
+        Custom Search
+    {% endif %}
+{% endblock %}
+
+<!--search form-->
+{% block search_form %}
+<div class="container-fluid p-2 pb-5 bg-secondary-subtle">
+
+<!--    main title-->
+    <a href="{{ url_for('index') }}" class="text-secondary">
+        <h1 class="text-center text-body-secondary my-4">
+            Custom Google Search
+        </h1>
+    </a>
+
+<!--    form-->
+    <form method="post">
+        <div class="row justify-content-center">
+
+            <div class="col-4">
+                <input class="p-2 form-control" type="text" id="search" name="search" value="{{ keyword }}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-secondary p-2">Search</button>
+            </div>
+        </div>
+    </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger mb-0 w-25" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+</div>
+{% endblock %}
+
+<!--content-->
+{% block content %}
+<div class="container p-1">
+
+<!--    if there is a result for keyword-->
+    {% if data %}
+
+<!--    save button-->
+    <div class="container justify-content-center mb-3 secondary">
+        <a href="{{ url_for('save', json_path=json_path) }}">
+            <button class="btn btn-secondary m-3">Save as json</button>
+        </a>
+    </div>
+
+<!--    results list-->
+    <ul class="list-group">
+        {% for item in data %}
+
+<!--        list item-->
+        <li class="list-group-item">
+            <div class="row">
+
+<!--                linked title and extract -->
+                <div class="col-8">
+                    <h5><a href="{{ item.link }}" target="_blank">{{ item.title }}</a></h5>
+                    <p>{{ item.snippet }}</p>
+                </div>
+
+<!--                image if possible to retrieve-->
+                <div class="col-4">
+                    <div class="float-end">
+                        {% if images[loop.index0] == "No image" %}
+                            <p>No image</p>
+                        {% else %}
+                            <img height="120px" src="{{ images[loop.index0] }}">
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+<!--    if there is no result for a keyword-->
+    {% else %}
+
+<!--    used technologies-->
+    <div class="container p-3">
+        <div class="row mt-4">
+            <H3 class="text-center">Powered by:</H3>
+        </div>
+        <div class="row p-5 mx-5">
+            <div class="col">
+                <img class="img-fluid mx-auto d-block h-25" src="{{ url_for('static', filename='python.png') }}">
+            </div>
+            <div class="col">
+                <img class="img-fluid mx-auto d-block h-25" src="{{ url_for('static', filename='flask.png') }}">
+            </div>
+            <div class="col">
+                <img class="img-fluid mx-auto d-block h-25" src="{{ url_for('static', filename='jinja.png') }}">
+            </div>
+            <div class="col">
+                <img class="img-fluid mx-auto d-block h-25" src="{{ url_for('static', filename='bootstrap.png') }}">
+            </div>
+            <div class="col">
+                <img class="img-fluid mx-auto d-block h-25" src="{{ url_for('static', filename='google_apis.png') }}">
+            </div>
+        </div>
+
+<!--        easter egg for fun-->
+        <div class="row mb-2">
+            <a class="my_a text-center">My thanks goes to Isa with ♡, for her inspiration and support.</a>
+        </div>
+
+    </div>
+    {% endif %}
+
+    {% endblock %}
+
+</div>

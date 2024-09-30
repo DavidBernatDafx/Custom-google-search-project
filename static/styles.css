@@ -1,0 +1,10 @@
+.my_a {
+    color: white;
+}
+
+.my_a:hover {
+    color:magenta !important;
+}
+
+
+
